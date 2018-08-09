@@ -147,7 +147,7 @@ for i=1:numl
     
 end 
 if (m >0 )
-system('mv ./vazoesRDH.xlsx ../')
+system('mv ./vazoesRDH.xlsx ../');
 cd('../');
 end
 %----------------------------------------------------------------------
@@ -194,7 +194,7 @@ clear all
 % numero do posto no RDH
 %1	6	12	15	17	18	24	25	31	47	49	52	57	61	63	205	209	211	251	266	912	917	966	996	999
 %
-% Tempos de viagem 
+% Tempos de viagem   https://agentes.ons.org.br/publicacao/PrevisaoVazoes/Dados_Gerais/
 %
 TV15=72;
 TV12=20;
@@ -219,6 +219,8 @@ postos=VazaoT(1,:);
 %
 %
 %
+tempo
+pos
 for j=3:tempo
     for i=1:pos
         %  
@@ -234,7 +236,7 @@ for j=3:tempo
         prop(205)=(VazaoINC(j-1,16)*(48-TV205)/24) + (VazaoINC(j-2,2)*(TV205-24)/24);
         prop(25)=(VazaoT(j-1,8)*(48-TV25)/24) + (VazaoT(j-2,8)*(TV25-24)/24);
         prop(24)=(VazaoT(j-1,7)*(24-TV24)/24) + (VazaoT(j-2,7)*(TV24-00)/24);
-        prop(209)=(VazaoT(j-1,17)*(24-TV209)/24) + (VazaoT(j-2,17)*(TV209-24)/24);
+        prop(209)=(VazaoT(j-1,17)*(24-TV209)/24) + (VazaoT(j-2,17)*(TV209-00)/24);
         %
         % panema
         %
@@ -274,7 +276,7 @@ for j=3:tempo
                  vobs(j,i)=VazaoT(j,3)-prop(6);
              case 917,
                  % marimbondo incremental propagada
-                 vobs(j,i)=VazaoINC(j,5);%-prop(15)-prop(12);
+                 vobs(j,i)=VazaoT(j,5)-prop(15)-prop(12);
                  
          %%%%%%% PARANAIBA        
                  
