@@ -134,11 +134,11 @@ for i=1:numl
     xlswrite('vazoesRDH.xlsx',header,'vobs_T','a1');
     xlswrite('vazoesRDH.xlsx',postos','vobs_T','b1');
     xlswrite('vazoesRDH.xlsx',data_excel','vobs_T',celula1);
-    xlswrite('vazoesRDH.xlsx',selecao1','vobs_T',celula2);
+    xlswrite('vazoesRDH.xlsx',selecao1,'vobs_T',celula2);
     xlswrite('vazoesRDH.xlsx',header,'vobs_INC','a1');
     xlswrite('vazoesRDH.xlsx',postos','vobs_INC','b1');
     xlswrite('vazoesRDH.xlsx',data_excel','vobs_INC',celula1);
-    xlswrite('vazoesRDH.xlsx',selecao2','vobs_INC',celula2);
+    xlswrite('vazoesRDH.xlsx',selecao2,'vobs_INC',celula2);
     %
     % move arquivo RDH lido para diretorio LIDOS
     %
