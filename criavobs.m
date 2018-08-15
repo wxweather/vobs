@@ -59,7 +59,7 @@ selecao=zeros(tam,1);
 %
 % data inicial do primeiro arquivo RDH
 %
-data0=datenum('1/1/2018') ;
+data0=datenum('31/12/2017','dd/mm/yyyy') ;
 %
 % busca os arquivos RDH não processados
 %
@@ -131,25 +131,23 @@ for i=1:numl
     celula1=sprintf('A%d',linha_excel) ; 
     celula2=sprintf('B%d',linha_excel) ; 
     header={ 'Posto' } ;
-    xlswrite('vazoesRDH.xlsx',header,'vobs_T','a1');
-    xlswrite('vazoesRDH.xlsx',postos','vobs_T','b1');
-    xlswrite('vazoesRDH.xlsx',data_excel','vobs_T',celula1);
-    xlswrite('vazoesRDH.xlsx',selecao1,'vobs_T',celula2);
-    xlswrite('vazoesRDH.xlsx',header,'vobs_INC','a1');
-    xlswrite('vazoesRDH.xlsx',postos','vobs_INC','b1');
-    xlswrite('vazoesRDH.xlsx',data_excel','vobs_INC',celula1);
-    xlswrite('vazoesRDH.xlsx',selecao2,'vobs_INC',celula2);
+    xlswrite('../vazoesRDH.xlsx',header,'vobs_T','a1');
+    xlswrite('../vazoesRDH.xlsx',postos','vobs_T','b1');
+    xlswrite('../vazoesRDH.xlsx',data_excel','vobs_T',celula1);
+    xlswrite('../vazoesRDH.xlsx',selecao1,'vobs_T',celula2);
+    xlswrite('../vazoesRDH.xlsx',header,'vobs_INC','a1');
+    xlswrite('../vazoesRDH.xlsx',postos','vobs_INC','b1');
+    xlswrite('../vazoesRDH.xlsx',data_excel','vobs_INC',celula1);
+    xlswrite('../vazoesRDH.xlsx',selecao2,'vobs_INC',celula2);
     %
     % move arquivo RDH lido para diretorio LIDOS
     %
     cmd=strcat('mv ./',arquivos(i).name,' ../LIDAS');
     system(cmd)
-    
-end 
-if (m >0 )
-system('mv ./vazoesRDH.xlsx ../');
-cd('../');
+    cd('../');
 end
+
+
 %----------------------------------------------------------------------
 %
 %  PARTE II - CRIAÇÃO DO ARQUIVO VOBS 
@@ -161,6 +159,43 @@ clear all
 %
 [VazaoT,datas ,~]=xlsread('vazoesRDH.xlsx','vobs_T');
 [VazaoINC,~,~]=xlsread('vazoesRDH.xlsx','vobs_INC');
+%
+% inicialziacao
+%
+[tempo,pos]=size(VazaoT);
+%
+% 
+%
+
+% for i=2:tempo-1
+%     for j=1:pos
+%         if isnan(VazaoT(i,j)) 
+%            VazapT(i,j) = (VazaoT(i+1,j)+VazaoT(i-1,j))/2;
+%            
+%         end
+%         if isnan(VazaoINC(i,j)) 
+%            VazapINC(i,j) = (VazaoINC(i+1,j)+VazaoINC(i-1,j))/2;
+%            
+%         end
+%         
+%         
+%         
+%     end
+% end
+%         
+% for i=1:tempo-1
+%     a=datas(i,1);
+%     b={''};
+%     if strcmp(a,b) == 1   
+%         
+%         d1=datenum(datas(i-1,1),'dd/mm/yyyy');
+%         d2=d1+1;
+%         datas(i,1)={ datestr(d2,'dd/mm/yyyy') } ;
+% 
+%         
+%     end
+% end
+
 % 
 %  para referencia 
 % 
@@ -207,10 +242,7 @@ TV24=17;
 TV47=15.62;
 TV49=11.6;
 TV61=23.2;
-%
-% inicialziacao
-%
-[tempo,pos]=size(VazaoT);
+
 %
 %  VazaoT -> totais 
 %  VazaoINC -. incrmeentais
@@ -221,116 +253,118 @@ postos=VazaoT(1,:);
 %
 tempo
 pos
+k=1;
 for j=3:tempo
+    k=k+1; 
     for i=1:pos
         %  
         % calculo das propagacoes
         % grande
-        prop(6)=(VazaoT(j-1,2)*(48-TV6)/24) + (VazaoT(j-2,2)*(TV6-24)/24);
-        prop(15)=(VazaoT(j-1,4)*(48-TV15)/24) + (VazaoT(j-2,15)*(TV15-24)/24);
-        prop(12)=(VazaoT(j,3)*(24-TV12)/24) + (VazaoT(j-1,3)*(TV12-0)/24);
-        prop(17)=(VazaoT(j-1,5)*(48-TV17)/24) + (VazaoT(j-2,5)*(TV17-24)/24);
+        prop(6)=VazaoT(j-1,2)*((48-TV6)/24) + VazaoT(j-2,2)*((TV6-24)/24);
+        prop(15)=VazaoT(j-1,4)*((48-TV15)/24) + VazaoT(j-2,4)*((TV15-24)/24);
+        prop(12)=VazaoT(j,3)*((24-TV12)/24) + VazaoT(j-1,3)*((TV12-0)/24);
+        prop(17)=VazaoT(j-1,5)*((48-TV17)/24) + VazaoT(j-2,5)*((TV17-24)/24);
         %
         % paranaiba
         %
-        prop(205)=(VazaoINC(j-1,16)*(48-TV205)/24) + (VazaoINC(j-2,2)*(TV205-24)/24);
-        prop(25)=(VazaoT(j-1,8)*(48-TV25)/24) + (VazaoT(j-2,8)*(TV25-24)/24);
-        prop(24)=(VazaoT(j-1,7)*(24-TV24)/24) + (VazaoT(j-2,7)*(TV24-00)/24);
-        prop(209)=(VazaoT(j-1,17)*(24-TV209)/24) + (VazaoT(j-2,17)*(TV209-00)/24);
+        prop(205)=VazaoINC(j-1,16)*((48-TV205)/24) + VazaoINC(j-2,16)*((TV205-24)/24);
+        prop(25)=VazaoT(j-1,8)*((48-TV25)/24) + VazaoT(j-2,8)*((TV25-24)/24);
+        prop(24)=VazaoT(j,7)*((24-TV24)/24) + VazaoT(j-1,7)*((TV24-00)/24);
+        prop(209)=VazaoT(j,17)*((24-TV209)/24) + VazaoT(j-1,17)*((TV209-00)/24);
         %
         % panema
         %
-        prop(47)=(VazaoINC(j,10)*(24-TV47)/24) + (VazaoINC(j-1,10)*(TV47-0)/24);
-        prop(49)=(VazaoT(j,11)*(24-TV49)/24) + (VazaoT(j-1,11)*(TV49-0)/24);
-        prop(61)=(VazaoT(j,14)*(24-TV61)/24) + (VazaoT(j-1,14)*(TV61-0)/24);
+        prop(47)=VazaoINC(j,10)*((24-TV47)/24) + VazaoINC(j-1,10)*((TV47-0)/24);
+        prop(49)=VazaoT(j,11)*((24-TV49)/24) + VazaoT(j-1,11)*((TV49-0)/24);
+        prop(61)=VazaoT(j,14)*((24-TV61)/24) + VazaoT(j-1,14)*((TV61-0)/24);
         %
         % Itaipu 
         %
         switch postos(i)
              case 1,
                 % CAMARGOS
-                vobs(j,i)=VazaoT(j,i);
+                vobs(k,i)=VazaoT(j,i);
              case  211,  
                 % FUNIL_MG
-                vobs(j,i)=VazaoINC(j,i); 
+                vobs(k,i)=VazaoINC(j,i); 
              case 996,
                 % incremental propagada FURNAS_INC
-                vobs(j,i)=VazaoINC(j,2);      
+                vobs(k,i)=VazaoINC(j,2);      
              case 6,
                  % FURNAS
-                 vobs(j,i)=VazaoT(j,i);    
+                 vobs(k,i)=VazaoT(j,i);    
              case 12,
                  % Pcolombia
-                   vobs(j,i)=VazaoT(j,i);  
+                   vobs(k,i)=VazaoT(j,i);  
              case 15,
                  % EDACUNHA
-                   vobs(j,i)=VazaoT(j,i);  
+                   vobs(k,i)=VazaoT(j,i);  
              case 17,
                  % MARIMBONDO
-                   vobs(j,i)=VazaoT(j,i);
+                   vobs(k,i)=VazaoT(j,i);
              case 18,
                  % avermelha
-                 vobs(j,i)=VazaoT(j,i)-prop(17); 
+                 vobs(k,i)=VazaoT(j,i)-prop(17); 
              case 912,
                  % indremental pcolombia
-                 vobs(j,i)=VazaoT(j,3)-prop(6);
+                 vobs(k,i)=VazaoT(j,3)-prop(6);
              case 917,
                  % marimbondo incremental propagada
-                 vobs(j,i)=VazaoT(j,5)-prop(15)-prop(12);
+                 vobs(k,i)=VazaoT(j,5)-prop(15)-prop(12);
                  
          %%%%%%% PARANAIBA        
                  
              case 205,
                  %CORUMBAIV
-                 vobs(j,i)=VazaoT(j,i);
+                 vobs(k,i)=VazaoT(j,i);
              case 209,
                  %corumbai
-                 vobs(j,i)=VazaoT(j,i)-prop(205);
+                 vobs(k,i)=VazaoT(j,i)-prop(205);
              case 251,
                  %serra do facao 
-                 vobs(j,i)=VazaoT(j,i);
+                 vobs(k,i)=VazaoT(j,i);
              case 24,
                  %Emborcacao
-                 vobs(j,i)=VazaoINC(j,i);
+                 vobs(k,i)=VazaoINC(j,i);
              case 25,
                  %novaponte
-                 vobs(j,i)=VazaoT(j,i);
+                 vobs(k,i)=VazaoT(j,i);
              case 31,
                  %itumbiara
-                 vobs(j,i)=VazaoT(j,i)-prop(209)-prop(24)-prop(25);
+                 vobs(k,i)=VazaoT(j,i)-prop(209)-prop(24)-prop(25);
              
              
              
              %%%%%%%% PARANAPANEMA
              case 47,
                  % jurumirim
-                 vobs(j,i)=VazaoT(j,i);
+                 vobs(k,i)=VazaoT(j,i);
              case 49, 
                  % chavantes
-                 vobs(j,i)=VazaoT(j,i)-prop(47);
+                 vobs(k,i)=VazaoT(j,i)-prop(47);
              case 52,
                  % canoasi
-                 vobs(j,i)=VazaoT(j,i)-prop(49);
+                 vobs(k,i)=VazaoT(j,i)-prop(49);
              case 57,
                  % Capivara
-                 vobs(j,i)=VazaoT(j,i);
+                 vobs(k,i)=VazaoT(j,i);
              case 61,
                  % capivara
-                 vobs(j,i)=VazaoINC(j,i);
+                 vobs(k,i)=VazaoINC(j,i);
              case 63,
                  % Rosana
-                 vobs(j,i)=VazaoT(j,i)-prop(61);
+                 vobs(k,i)=VazaoT(j,i)-prop(61);
 
              
               %%%%%% ITAIPU 
               
              case 966, 
                  % incremental nao controlada itaipu 
-                 vobs(j,i)=VazaoINC(j,20);
+                 vobs(k,i)=VazaoINC(j,20);
              case 266,
                  %Itaipu 
-                 vobs(j,i)=VazaoT(j,i);
-                 
+                 vobs(k,i)=VazaoT(j,i);
+                
                  
          end            
     end 
